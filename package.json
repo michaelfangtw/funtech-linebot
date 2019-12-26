@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
- "scripts": {
+  "scripts": {
     "start": "node ."
- }, 
- "author": "",
+  },
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "get-json": "^1.0.1",
     "linebot": "^1.5.3"
   }
 }
