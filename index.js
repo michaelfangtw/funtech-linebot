@@ -74,9 +74,11 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
         var data = JSON.parse(body);
         //console.log('data=')
         //console.log(data); // 可開啟這行在 Command Line 觀看 data 內容
+        var count=0;
         if (Array.isArray(data)){
             data.forEach(function(e, i) {
-              console.log('i='+i);
+              count=i;
+              //console.log('i='+i);
               pm[i] = [];
               pm[i][0] = e.SiteName; //大里
               pm[i][1] = e.County; //臺中市
@@ -85,18 +87,19 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
               pm[i][4] = e.PublishTime; //2019-12-26 22:00
               pm[i][5] = e.Status; //Status
 
-              console.log('=============');
-              console.log(e);
-              console.log('=============');
-            });           
-        }
-        //fs.writeFile( 'save.json', JSON.stringify( data ), 'utf8');
-        fs.writeFile('pm25.json', JSON.stringify(data),function(err){
+              //console.log('=============');
+              //console.log(e);
+              //console.log('=============');
+            }); 
+            console.log("PM2.5資料筆數:"+count);
+        }        
+        /*fs.writeFile('pm25.json', JSON.stringify(data),function(err){
                 if (err)
                   console.log(err);
                 else
                   console.log('writeFile complete.');
         });
+        */
       });
       req.on('error', function(e) {
         console.error(e);
