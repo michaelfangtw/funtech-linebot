@@ -16,9 +16,8 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
   var pm = [];
   var usd;//美金
   var usdTime;
-  _getJSON();
+  _getPM25();
   _getUSD();
-  
   _bot();
   const app = express();
   const linebotParser = bot.parser();
@@ -34,22 +33,36 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
     bot.on('message', function(event) {
       if (event.message.type == 'text') {
         var msg = event.message.text.toUpperCase();
-        var replyMsg = '';                        
-        if (msg.indexOf('PM2.5') != -1) {
-          pm.forEach(function(e, i) {
-            if (msg.indexOf(e.SiteName) != -1) {
-              lineMsg=JSON.stringify(e);
-              replyMsg = e.SiteName + ' '+e.County+'的 PM2.5 數值為 ' +e['PM2.5']+'\r\n空氣品質:'+e.Status+ '\r\n更新時間:'+e.PublishTime;
-            }
-          });
-          if (replyMsg == '') {
-            replyMsg = '請輸入正確的地點';
-          }
+        var replyMsg = '';               
+        
+        var regex = new RegExp('[0-9]*');
+        var isNumber=regex.exec(msg);
+        console.log('isNumber'+isNumber);
+        if (isNumber){
+                _getStock(msg).then((response)=>{
+                    replyMsg=response; //取得
+                }).catch((error) => {
+                    console.log(error);
+                });
+        }else{
+                //非數字
+                if (msg.indexOf('PM2.5') != -1) {
+                  pm.forEach(function(e, i) {
+                    if (msg.indexOf(e.SiteName) != -1) {
+                      lineMsg=JSON.stringify(e);
+                      replyMsg = e.SiteName + ' '+e.County+'的 PM2.5 數值為 ' +e['PM2.5']+'\r\n空氣品質:'+e.Status+ '\r\n更新時間:'+e.PublishTime;
+                    }
+                  });
+                  if (replyMsg == '') {
+                    replyMsg = '請輸入正確的地點';
+                  }
+                }
+
+                if (msg.indexOf('美金') != -1) {          
+                    replyMsg = '美金即期匯率:'+usd+ ' 更新時間:'+usdTime;
+                }        
         }
 
-        if (msg.indexOf('美金') != -1) {          
-            replyMsg = '美金即期匯率:'+usd+ ' 更新時間:'+usdTime;
-        }
         
         if (replyMsg == '') {
           replyMsg = '請輸入正確的地點';
@@ -70,7 +83,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
   
   }
   
-  function _getJSON() {    
+  function _getPM25() {    
     var url='http://opendata.epa.gov.tw/api/v1/AQI?%24skip=0&%24top=1000&%24format=json';
     console.log(url); 
     var body='';
@@ -117,7 +130,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
 
     
     clearTimeout(timerPM);    
-    timerPM = setInterval(_getJSON, 1800*1000); //每半小時抓取一次新資料
+    timerPM = setInterval(_getPM25, 1800*1000); //每半小時抓取一次新資料
   }
 
   
@@ -149,4 +162,31 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
     
     clearTimeout(timerUSD);    
     timerUSD = setInterval(_getUSD, 1800*1000); //每半小時抓取一次新資料
+  }
+
+  function _getStock(stock) {
+    return new Promise((resolve, reject) => {
+          var url='https://tw.stock.yahoo.com/q/q?s='+stock;
+          console.log(url); 
+          var result="";
+          var body='';
+          var req = https.get(url,function(res) {      
+            res.on('data', function (chunk) {
+              body += chunk;
+          });
+
+            res.on('end', function(){        
+              //console.log(body);
+                index=3;  //第三欄        
+                var $ = cheerio.load(body);
+                var target = $("table table tr td b");
+                console.log(target[0].children[0].data);     
+                result= target[0].children[0].data;
+                resolve(result);
+            });
+            req.on('error', function(e) {
+              reject(error);
+            });
+          });
+      });
   }
