@@ -204,9 +204,11 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
                       result=stockId+' '+stockName+' 股價:'+price+' 漲跌:'+change+' '+changePercent+' 成交量:' + volume;
                       console.log(result);
                       resolve(result);
-                }catch(err){
+                }catch(err){                                   
                     result="查無股票代號:" +stockId;
                     console.log('getStock,error='+err);
+                    console.log(result);
+                    resolve(result);
                 }
             });
             req.on('error', function(e) {
