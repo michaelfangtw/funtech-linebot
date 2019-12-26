@@ -33,7 +33,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
           pm.forEach(function(e, i) {
             if (msg.indexOf(e[0]) != -1) {
               lineMsg=JSON.stringify(e);
-              replyMsg = e[0] + '的 PM2.5 數值為 ' + lineMsg;
+              replyMsg = e[0] + '的 PM2.5 數值為 ' + e[2];
             }
           });
           if (replyMsg == '') {
