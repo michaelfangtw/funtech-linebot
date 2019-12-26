@@ -18,7 +18,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
   var usdTime;
   _getPM25();
   _getUSD();
-  _getStock('0050');
+  _getStock('0056');
   _bot();
   const app = express();
   const linebotParser = bot.parser();
@@ -179,12 +179,28 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
             res.on('end', function(){        
                 var $ = cheerio.load(body);                
                 var stockTag = $(".headline");                
-                var stockName=stockTag[0].children[0].data;
-                console.log(stockName);
+                var stockName=stockTag[0].children[0].data.replace('即時行情','');
+                console.log('stockName='+stockName);
                 var priceTag = $(".astkPrice");                
-                var price=priceTag[0].children[0].data;
-                console.log(price);
-                result=stockName+' '+price;
+                var price=priceTag[0].children[0].data.replace(/\n/g, "");
+                //console.log(priceTag);
+                console.log('price='+price);
+
+                var changeTag = $(".astkInfo .astkChg");                
+                var change=changeTag[0].children[0].data;
+                console.log('change='+change);
+                //console.log(changeTag[0].children[0].data);
+
+                var changePercentTag = $(".astkChg i");                
+                var changePercent=changePercentTag.text();
+                console.log('changePercent='+changePercent);
+
+                var volumeTag = $(".astkIdx li span");                
+                var volume=volumeTag[4].children[0].data;
+                console.log(volume);
+
+                result=stockId+' '+stockName+' 股價:'+price+' 漲跌:'+change+' '+changePercent+' 成交量:' + volume;
+                console.log(result);
                 resolve(result);
             });
             req.on('error', function(e) {
