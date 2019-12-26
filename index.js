@@ -150,12 +150,12 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
         //console.log(body);
           var $ = cheerio.load(body);
           var target = $(".rate-content-sight.text-right.print_hide");
-          console.log(target[1].children[0].data);
-          usd = target[1].children[0].data;
           
-          var targetTime = $('.time');          
-          console.log('USD='+targetTime[0].children[0].data);
+          usd = target[1].children[0].data;
+          console.log(target[1].children[0].data);
+          var targetTime = $('.time');                    
           usdTime = targetTime[0].children[0].data;          
+          console.log('USD='+usd+' '+usdTime);
       });
       req.on('error', function(e) {
         console.error(e);
