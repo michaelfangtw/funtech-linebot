@@ -176,32 +176,38 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
               body += chunk;
           });
 
-            res.on('end', function(){        
-                var $ = cheerio.load(body);                
-                var stockTag = $(".headline");                
-                var stockName=stockTag[0].children[0].data.replace('即時行情','');
-                console.log('stockName='+stockName);
-                var priceTag = $(".astkPrice");                
-                var price=priceTag[0].children[0].data.replace(/\n/g, "");
-                //console.log(priceTag);
-                console.log('price='+price);
+            res.on('end', function(){     
+                try
+                {
+                      var $ = cheerio.load(body);                
+                      var stockTag = $(".headline");                
+                      var stockName=stockTag[0].children[0].data.replace('即時行情','');
+                      console.log('stockName='+stockName);
+                      var priceTag = $(".astkPrice");                
+                      var price=priceTag[0].children[0].data.replace(/\n/g, "");
+                      //console.log(priceTag);
+                      console.log('price='+price);
 
-                var changeTag = $(".astkInfo .astkChg");                
-                var change=changeTag[0].children[0].data;
-                console.log('change='+change);
-                //console.log(changeTag[0].children[0].data);
+                      var changeTag = $(".astkInfo .astkChg");                
+                      var change=changeTag[0].children[0].data;
+                      console.log('change='+change);
+                      //console.log(changeTag[0].children[0].data);
 
-                var changePercentTag = $(".astkChg i");                
-                var changePercent=changePercentTag.text();
-                console.log('changePercent='+changePercent);
+                      var changePercentTag = $(".astkChg i");                
+                      var changePercent=changePercentTag.text();
+                      console.log('changePercent='+changePercent);
 
-                var volumeTag = $(".astkIdx li span");                
-                var volume=volumeTag[4].children[0].data;
-                console.log(volume);
+                      var volumeTag = $(".astkIdx li span");                
+                      var volume=volumeTag[4].children[0].data;
+                      console.log(volume);
 
-                result=stockId+' '+stockName+' 股價:'+price+' 漲跌:'+change+' '+changePercent+' 成交量:' + volume;
-                console.log(result);
-                resolve(result);
+                      result=stockId+' '+stockName+' 股價:'+price+' 漲跌:'+change+' '+changePercent+' 成交量:' + volume;
+                      console.log(result);
+                      resolve(result);
+                }catch(err){
+                    result="查無股票代號:" +stockId;
+                    console.log('getStock,error='+err);
+                }
             });
             req.on('error', function(e) {
               reject(error);
