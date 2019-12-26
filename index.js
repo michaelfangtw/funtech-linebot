@@ -33,7 +33,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
           pm.forEach(function(e, i) {
             if (msg.indexOf(e[0]) != -1) {
               lineMsg=JSON.stringify(e);
-              replyMsg = e[0] + ' '+e[1]+'的 PM2.5 數值為 ' + e[2];
+              replyMsg = e.SiteName + ' '+e.County+'的 PM2.5 數值為 ' +e['PM2.5']+' 空氣品質:'+e.Status+ '更新時間:'+e.PublishTime;
             }
           });
           if (replyMsg == '') {
@@ -81,12 +81,13 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
               count=i;
               //console.log('i='+i);
               pm[i] = [];
-              pm[i][0] = e.SiteName; //大里
-              pm[i][1] = e.County; //臺中市
-              pm[i][2] = e['PM2.5'] * 1; //18
-              pm[i][3] = e.Pollutant; //細懸浮微粒
-              pm[i][4] = e.PublishTime; //2019-12-26 22:00
-              pm[i][5] = e.Status; //Status
+              // pm[i][0] = e.SiteName; //大里
+              // pm[i][1] = e.County; //臺中市
+              // pm[i][2] = e['PM2.5'] * 1; //18
+              // pm[i][3] = e.Pollutant; //細懸浮微粒
+              // pm[i][4] = e.PublishTime; //2019-12-26 22:00
+              // pm[i][5] = e.Status; //Status
+              pm[i]=e;
               lastTime=e.PublishTime;
 
               //console.log('=============');
