@@ -83,7 +83,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
               pm[i][0] = e.SiteName; //大里
               pm[i][1] = e.County; //臺中市
               pm[i][2] = e['PM2.5'] * 1; //18
-              pm[i][3] = e.Pollutant* 1; //細懸浮微粒
+              pm[i][3] = e.Pollutant; //細懸浮微粒
               pm[i][4] = e.PublishTime; //2019-12-26 22:00
               pm[i][5] = e.Status; //Status
 
