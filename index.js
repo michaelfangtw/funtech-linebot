@@ -34,11 +34,9 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
     bot.on('message', function(event) {
       if (event.message.type == 'text') {
         var msg = event.message.text.toUpperCase();
-        var replyMsg = '';               
-        
-        var regex = new RegExp('[0-9]*');
-        var isNumber=regex.exec(msg);
-        console.log('isNumber'+isNumber);
+        var replyMsg = '';                       
+        var isNumber=msg.match("[0-9]{4,6}");
+        console.log('isNumber='+isNumber);
         if (isNumber){
                 _getStock(msg).then((response)=>{
                     replyMsg=response; //取得
