@@ -139,7 +139,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
           
           var targetTime = $('.time');          
           console.log(targetTime[0].children[0].data);
-          usdTime = targetTime;          
+          usdTime = targetTime[0].children[0].data;          
       });
       req.on('error', function(e) {
         console.error(e);
