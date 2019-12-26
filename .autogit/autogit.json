@@ -1,5 +1,5 @@
 {
-  "updateInterval": 180,
+  "updateInterval": 60*60, //60分鐘
   "logging": true,
   "silent": true  
 }
