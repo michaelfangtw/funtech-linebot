@@ -27,7 +27,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
   function _bot() {
     bot.on('message', function(event) {
       if (event.message.type == 'text') {
-        var msg = event.message.text;
+        var msg = event.message.text.toUpperCase();
         var replyMsg = '';
         if (msg.indexOf('PM2.5') != -1) {
           pm.forEach(function(e, i) {
