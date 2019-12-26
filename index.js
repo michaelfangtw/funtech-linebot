@@ -32,7 +32,8 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
         if (msg.indexOf('PM2.5') != -1) {
           pm.forEach(function(e, i) {
             if (msg.indexOf(e[0]) != -1) {
-              replyMsg = e[0] + '的 PM2.5 數值為 ' + e[1];
+              lineMsg=JSON.stringify(e);
+              replyMsg = e[0] + '的 PM2.5 數值為 ' + lineMsg;
             }
           });
           if (replyMsg == '') {
@@ -77,11 +78,13 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
             data.forEach(function(e, i) {
               console.log('i='+i);
               pm[i] = [];
-              pm[i][0] = e.SiteName; //高雄(左營)
-              pm[i][1] = e.County; //高雄市
-              pm[i][2] = e.AQI * 1; //69
+              pm[i][0] = e.SiteName; //大里
+              pm[i][1] = e.County; //臺中市
+              pm[i][2] = e['PM2.5'] * 1; //18
               pm[i][3] = e.Pollutant* 1; //細懸浮微粒
-              pm[i][4] = e.Status; //Status
+              pm[i][4] = e.PublishTime; //2019-12-26 22:00
+              pm[i][5] = e.Status; //Status
+
               console.log('=============');
               console.log(e);
               console.log('=============');
