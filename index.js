@@ -41,9 +41,15 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
         if (isNumber){
                 _getStock(msg).then((response)=>{
                     replyMsg=response; //取得
+                    event.reply(replyMsg).then(function(data) {
+                      console.log(replyMsg);
+                    }).catch(function(error) {
+                      console.log('error');
+                    });      
                 }).catch((error) => {
                     console.log(error);
                 });
+
         }else{
                 //非數字
                 if (msg.indexOf('PM2.5') != -1) {
@@ -60,28 +66,25 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
 
                 if (msg.indexOf('美金') != -1) {          
                     replyMsg = '美金即期匯率:'+usd+ ' 更新時間:'+usdTime;
-                }        
-        }
-
+                }  
+                if (replyMsg == '') {
+                  replyMsg = '請輸入正確的地點';
+                }
+              
         
-        if (replyMsg == '') {
-          replyMsg = '請輸入正確的地點';
-        }
-      
-
-        if (replyMsg == '') {
-          replyMsg = '不知道「'+msg+'」是什麼意思 :p';
-        }
-  
-        event.reply(replyMsg).then(function(data) {
-          console.log(replyMsg);
-        }).catch(function(error) {
-          console.log('error');
-        });
-      }
-    });
-  
-  }
+                if (replyMsg == '') {
+                  replyMsg = '不知道「'+msg+'」是什麼意思 :p';
+                }
+          
+                event.reply(replyMsg).then(function(data) {
+                  console.log(replyMsg);
+                }).catch(function(error) {
+                  console.log('error');
+                });      
+        }//check number
+      }//msg = text
+    });//on.message  
+  }//bot
   
   function _getPM25() {    
     var url='http://opendata.epa.gov.tw/api/v1/AQI?%24skip=0&%24top=1000&%24format=json';
