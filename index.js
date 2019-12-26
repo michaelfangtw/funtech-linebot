@@ -75,6 +75,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
         //console.log('data=')
         //console.log(data); // 可開啟這行在 Command Line 觀看 data 內容
         var count=0;
+        var lastTime='';
         if (Array.isArray(data)){
             data.forEach(function(e, i) {
               count=i;
@@ -86,12 +87,14 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
               pm[i][3] = e.Pollutant; //細懸浮微粒
               pm[i][4] = e.PublishTime; //2019-12-26 22:00
               pm[i][5] = e.Status; //Status
+              lastTime=e.PublishTime;
 
               //console.log('=============');
               //console.log(e);
               //console.log('=============');
             }); 
             console.log("PM2.5資料筆數:"+count);
+            console.log("最後更新時間:"+lastTime);
         }        
         /*fs.writeFile('pm25.json', JSON.stringify(data),function(err){
                 if (err)
