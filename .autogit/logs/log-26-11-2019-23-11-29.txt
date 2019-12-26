@@ -1,0 +1,16 @@
+-------------------- Auto-Git Log --------------------
+		Thu Dec 26 2019 23:11:29 GMT+0800 (台北標準時間)
+------------------------------------------------------
+
+Modified files:
+* index.js
+
+
+Created files:
+* .autogit/autogit.json
+
+
+Deleted files:
+
+
+Renamed files:
