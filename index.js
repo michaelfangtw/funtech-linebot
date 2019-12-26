@@ -18,6 +18,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
   var usdTime;
   _getPM25();
   _getUSD();
+  _getStock('0050');
   _bot();
   const app = express();
   const linebotParser = bot.parser();
@@ -164,9 +165,9 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
     timerUSD = setInterval(_getUSD, 1800*1000); //每半小時抓取一次新資料
   }
 
-  function _getStock(stock) {
+  function _getStock(stockId) {
     return new Promise((resolve, reject) => {
-          var url='https://tw.stock.yahoo.com/q/q?s='+stock;
+          var url='https://m.wantgoo.com/s/'+stockId;
           console.log(url); 
           var result="";
           var body='';
@@ -176,12 +177,14 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
           });
 
             res.on('end', function(){        
-              //console.log(body);
-                index=3;  //第三欄        
-                var $ = cheerio.load(body);
-                var target = $("table table tr td b");
-                console.log(target[0].children[0].data);     
-                result= target[0].children[0].data;
+                var $ = cheerio.load(body);                
+                var stockTag = $(".headline");                
+                var stockName=stockTag[0].children[0].data;
+                console.log(stockName);
+                var priceTag = $(".astkPrice");                
+                var price=priceTag[0].children[0].data;
+                console.log(price);
+                result=stockName+' '+price;
                 resolve(result);
             });
             req.on('error', function(e) {
