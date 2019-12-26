@@ -115,8 +115,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
               pm[i]=e;
               lastTime=e.PublishTime;
             }); 
-            console.log("PM2.5資料筆數:"+count);
-            console.log("最後更新時間:"+lastTime);
+            console.log('PM2.5資料筆數:'+count+ ' 更新時間:'+lastTime);
         }        
         /*fs.writeFile('pm25.json', JSON.stringify(data),function(err){
                 if (err)
@@ -149,13 +148,11 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
       res.on('end', function(){
         //console.log(body);
           var $ = cheerio.load(body);
-          var target = $(".rate-content-sight.text-right.print_hide");
-          
-          usd = target[1].children[0].data;
-          console.log(target[1].children[0].data);
+          var target = $(".rate-content-sight.text-right.print_hide");          
+          usd = target[1].children[0].data;          
           var targetTime = $('.time');                    
           usdTime = targetTime[0].children[0].data;          
-          console.log('USD='+usd+' '+usdTime);
+          console.log('USD:'+usd+',更新時間:'+usdTime);
       });
       req.on('error', function(e) {
         console.error(e);
