@@ -5,12 +5,20 @@ var https = require('https');
 var fs = require("fs");
 var cheerio=require('cheerio');//html parser
 
+/*
 var bot = linebot({
 channelId: '1653670422',
 channelSecret: '2f17a0275f1f57e1d7037f57d529de37',
 channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhIOh8Y6gb0x1gIkNz6FkcEWvT+VGAQZsUSbqzXTKvGQR0WavMRJolZ2jRLPELKFHLz1PNB4CWv/BWyAxj4dWKl4m0y84gdB04t89/1O/w1cDnyilFU='}
 );
+*/
 
+  var bot = linebot({
+  channelId: process.env.ChannelId,
+  channelSecret: process.env.ChannelSecret,
+  channelAccessToken: process.env.ChannelAccessToken}
+  );
+  
   var timerPM;
   var timerUSD
   var pm = [];
@@ -43,7 +51,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
                     event.reply(replyMsg).then(function(data) {
                       console.log(replyMsg);
                     }).catch(function(error) {
-                      console.log('error');
+                      console.log('error='+error);
                     });      
                 }).catch((error) => {
                     console.log(error);
@@ -198,10 +206,9 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
                       var volume=volumeTag[4].children[0].data;
                       console.log('volume='+volume);
 
-                      var timeTag = $("time.update");                
-                      //var time=timeTag[0].children[0].data;
+                      var timeTag = $("time.update");                                      
                       var time=timeTag[0].children[0].data;
-                      console.log(timeTag);
+                      //console.log(timeTag);
                       console.log('time='+time);
 
                       result=stockId+' '+stockName+'\r\n股價:'+price+'\r\n漲跌:'+change+' '+changePercent+'\r\n成交量:' + volume;
