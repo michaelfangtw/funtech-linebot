@@ -63,7 +63,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
                   }
                 }
 
-                if (msg.indexOf('美金') != -1) {          
+                if ((msg.indexOf('美金') != -1)||(msg.indexOf('美元') != -1)) {          
                     replyMsg = '美金即期匯率:'+usd+ ' 更新時間:'+usdTime;
                 }  
                 if (replyMsg == '') {
@@ -116,13 +116,12 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
             }); 
             console.log('PM2.5資料筆數:'+count+ ' 更新時間:'+lastTime);
         }        
-        /*fs.writeFile('pm25.json', JSON.stringify(data),function(err){
+        fs.writeFile('pm25.json', JSON.stringify(data),function(err){
                 if (err)
                   console.log(err);
                 else
                   console.log('writeFile complete.');
-        });
-        */
+        });        
       });
       req.on('error', function(e) {
         console.error(e);
