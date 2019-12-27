@@ -205,7 +205,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
                       console.log(timeTag);
                       console.log('time='+time);
 
-                      result=stockId+' '+stockName+'\r\n股價:'+price+' 漲跌:'+change+' '+changePercent+'\r\n成交量:' + volume;
+                      result=stockId+' '+stockName+'\r\n股價:'+price+'\r\n漲跌:'+change+' '+changePercent+'\r\n成交量:' + volume;
                       result+="\r\n資料更新時間:"+time;
                       console.log(result);
                       resolve(result);
