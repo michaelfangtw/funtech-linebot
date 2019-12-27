@@ -18,6 +18,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
   channelSecret: process.env.ChannelSecret,
   channelAccessToken: process.env.ChannelAccessToken}
   );
+  
   console.log('process.env.ChannelId='+process.env.ChannelId);
   console.log('process.env.ChannelSecret='+process.env.ChannelSecret);
   console.log('process.env.ChannelAccessToken='+process.env.ChannelAccessToken);
