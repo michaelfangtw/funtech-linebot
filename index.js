@@ -197,9 +197,16 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
 
                       var volumeTag = $(".astkIdx li span");                
                       var volume=volumeTag[4].children[0].data;
-                      console.log(volume);
+                      console.log('volume='+volume);
 
-                      result=stockId+' '+stockName+' 股價:'+price+' 漲跌:'+change+' '+changePercent+' 成交量:' + volume;
+                      var timeTag = $("time.update");                
+                      //var time=timeTag[0].children[0].data;
+                      var time=timeTag[0].children[0].data;
+                      console.log(timeTag);
+                      console.log('time='+time);
+
+                      result=stockId+' '+stockName+'\r\n股價:'+price+' 漲跌:'+change+' '+changePercent+'\r\n成交量:' + volume;
+                      result+="\r\n資料更新時間:"+time;
                       console.log(result);
                       resolve(result);
                 }catch(err){                                   
