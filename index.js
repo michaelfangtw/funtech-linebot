@@ -11,6 +11,7 @@ var cheerio=require('cheerio');//html parser
     channelAccessToken: process.env.ChannelAccessToken}
   );
   
+  let adminUserId='U773bb1c2a78a60a0a72e21c19c67befc';
   //console.log('process.env.ChannelId='+process.env.ChannelId);
   //console.log('process.env.ChannelSecret='+process.env.ChannelSecret);
   //console.log('process.env.ChannelAccessToken='+process.env.ChannelAccessToken);
@@ -70,7 +71,12 @@ var cheerio=require('cheerio');//html parser
 
                 if ((msg.indexOf('美金') != -1)||(msg.indexOf('美元') != -1)) {          
                     replyMsg = '美金即期匯率:'+usd+ ' 更新時間:'+usdTime;
-                }  
+                }
+                
+                if (userId==adminUserId){
+                    replyMsg = '您目前身分為是管理者!';
+                }
+
                 if (replyMsg == '') {
                   replyMsg = '請輸入正確的地點';
                 }
