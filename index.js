@@ -5,27 +5,19 @@ var https = require('https');
 var fs = require("fs");
 var cheerio=require('cheerio');//html parser
 
-/*
-var bot = linebot({
-channelId: '1653670422',
-channelSecret: '2f17a0275f1f57e1d7037f57d529de37',
-channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhIOh8Y6gb0x1gIkNz6FkcEWvT+VGAQZsUSbqzXTKvGQR0WavMRJolZ2jRLPELKFHLz1PNB4CWv/BWyAxj4dWKl4m0y84gdB04t89/1O/w1cDnyilFU='}
-);
-*/
-
   var bot = linebot({
-  channelId: process.env.ChannelId,
-  channelSecret: process.env.ChannelSecret,
-  channelAccessToken: process.env.ChannelAccessToken}
+    channelId: process.env.ChannelId,
+    channelSecret: process.env.ChannelSecret,
+    channelAccessToken: process.env.ChannelAccessToken}
   );
-  console.log('process.env.channelId='+process.env.channelId);
-  console.log('process.env.ChannelId='+process.env.ChannelId);
-  console.log('process.env.ChannelSecret='+process.env.ChannelSecret);
-  console.log('process.env.ChannelAccessToken='+process.env.ChannelAccessToken);
+  
+  //console.log('process.env.ChannelId='+process.env.ChannelId);
+  //console.log('process.env.ChannelSecret='+process.env.ChannelSecret);
+  //console.log('process.env.ChannelAccessToken='+process.env.ChannelAccessToken);
   
   var timerPM;
-  var timerUSD
-  var pm = [];
+  var timerUSD;
+    var pm = [];
   var usd;//美金
   var usdTime;
   _getPM25();
@@ -44,6 +36,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
   
   function _bot() {
     bot.on('message', function(event) {
+      let userId=event.source.userId;
       if (event.message.type == 'text') {
         var msg = event.message.text.toUpperCase();
         var replyMsg = '';                       
@@ -51,7 +44,7 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
         console.log('isNumber='+isNumber);
         if (isNumber){
                 _getStock(msg).then((response)=>{
-                    replyMsg=response; //取得
+                    replyMsg='userId='+userId+' '+response; //取得
                     event.reply(replyMsg).then(function(data) {
                       console.log(replyMsg);
                     }).catch(function(error) {
@@ -232,3 +225,38 @@ channelAccessToken: 'DYMu02TejlJ1CAfkQ4mH8vmNXSato4azQvzyUA1DU8t8uWlnp2kxezvdZhI
           });
       });
   }
+
+  function _getStockVolume(stockId) {
+    return new Promise((resolve, reject) => {
+          var url='https://m.wantgoo.com/s/'+stockId;
+          console.log(url); 
+          var result="";
+          var body='';
+          var req = https.get(url,function(res) {      
+            res.on('data', function (chunk) {
+              body += chunk;
+          });
+
+            res.on('end', function(){     
+                try
+                {
+                      var $ = cheerio.load(body);
+                      var volumeTag = $(".astkIdx li span");                
+                      var volume=volumeTag[4].children[0].data;
+                      console.log('volume='+volume);
+                      result=volume;
+                      resolve(result);
+                }catch(err){                                   
+                    result="查無股票代號:" +stockId;
+                    console.log('getStock,error='+err);
+                    console.log(result);
+                    resolve(result);
+                }
+            });
+            req.on('error', function(e) {
+              reject(error);
+            });
+          });
+      });
+  }
+
