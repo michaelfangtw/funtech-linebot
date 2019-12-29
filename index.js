@@ -45,12 +45,8 @@ var cheerio=require('cheerio');//html parser
         console.log('isNumber='+isNumber);
         if (isNumber){
                 _getStock(msg).then((response)=>{
-                    replyMsg='userId='+userId+' '+response; //取得
-                    event.reply(replyMsg).then(function(data) {
-                      console.log(replyMsg);
-                    }).catch(function(error) {
-                      console.log('error='+error);
-                    });      
+                    replyMsg=response; //取得
+                    sendMessage(event,replyMsg);                
                 }).catch((error) => {
                     console.log(error);
                 });
@@ -62,40 +58,48 @@ var cheerio=require('cheerio');//html parser
                     if (msg.indexOf(e.SiteName) != -1) {
                       lineMsg=JSON.stringify(e);
                       replyMsg = e.SiteName + ' '+e.County+'的 PM2.5 數值為 ' +e['PM2.5']+'\r\n空氣品質:'+e.Status+ '\r\n更新時間:'+e.PublishTime;
+                      sendMessage(event,replyMsg);                
                     }
                   });
                   if (replyMsg == '') {
                     replyMsg = '請輸入正確的地點';
+                    sendMessage(event,replyMsg);                
                   }
                 }
 
                 if ((msg.indexOf('美金') != -1)||(msg.indexOf('美元') != -1)) {          
                     replyMsg = '美金即期匯率:'+usd+ ' 更新時間:'+usdTime;
+                    sendMessage(event,replyMsg);                
                 }
                 
                 if (userId==adminUserId){
                     replyMsg = '您目前身分為是管理者!';
-                }
+                }else{
 
-                if (replyMsg == '') {
-                  replyMsg = '請輸入正確的地點';
                 }
-              
         
                 if (replyMsg == '') {
                   replyMsg = '不知道「'+msg+'」是什麼意思 :p';
                 }
-          
-                event.reply(replyMsg).then(function(data) {
-                  console.log(replyMsg);
-                }).catch(function(error) {
-                  console.log('error');
-                });      
+                
         }//check number
       }//msg = text
     });//on.message  
   }//bot
   
+  //傳送訊息的函式
+function sendMessage(event,msg){
+  event.reply(msg).then(function(data) {
+     // success 
+     console.log(replyMsg);
+     return true;
+  }).catch(function(error) {
+     // error 
+     console.log('error='+error);
+     return false;
+  });
+}
+
   function _getPM25() {    
     var url='http://opendata.epa.gov.tw/api/v1/AQI?%24skip=0&%24top=1000&%24format=json';
     console.log(url); 
