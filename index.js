@@ -69,18 +69,22 @@ var cheerio=require('cheerio');//html parser
 
                 if ((msg.indexOf('美金') != -1)||(msg.indexOf('美元') != -1)) {          
                     replyMsg = '美金即期匯率:'+usd+ ' 更新時間:'+usdTime;
-                    sendMessage(event,replyMsg);                
+                    sendMessage(event,replyMsg);      
                 }
-                
-                if (userId==adminUserId){
-                    replyMsg = '您目前身分為是管理者!';
-                }else{
 
-                }
-        
-                if (replyMsg == '') {
-                  replyMsg = '不知道「'+msg+'」是什麼意思 :p';
-                }
+                cmdList='您可以使用的指令如下:\r\n';
+                cmdList+='股價查詢:e.g 0050\r\n';
+                cmdList+='美金匯率:e.g 我要查美金匯率\r\n';
+                cmdList+='PM2.5:e.g 板橋的PM2.5\r\n';
+            
+                if (userId==adminUserId){
+                    replyMsg ='您目前身分為是管理者!\r\n';                    
+                    replyMsg+=cmdList;
+                }else{
+                    replyMsg= '您目前身分為是一般使用者!';                
+                    replyMsg+=cmdList;
+                }     
+                sendMessage(event,replyMsg);   
                 
         }//check number
       }//msg = text
