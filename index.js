@@ -11,19 +11,23 @@ var cheerio=require('cheerio');//html parser
     channelAccessToken: process.env.ChannelAccessToken}
   );
   
-  let adminUserId='U773bb1c2a78a60a0a72e21c19c67befc';
+  
   //console.log('process.env.ChannelId='+process.env.ChannelId);
   //console.log('process.env.ChannelSecret='+process.env.ChannelSecret);
   //console.log('process.env.ChannelAccessToken='+process.env.ChannelAccessToken);
   
   var timerPM;
   var timerUSD;
-    var pm = [];
+  var timerCheckLargeVolume;
+  var pm = [];
   var usd;//美金
   var usdTime;
+  const minVolume=500;
+  const adminUserId='U773bb1c2a78a60a0a72e21c19c67befc';
   _getPM25();
   _getUSD();
-  _getStock('0056');
+
+  _checkLargeVolume('0056');
   _bot();
   const app = express();
   const linebotParser = bot.parser();
@@ -223,7 +227,7 @@ function sendMessage(event,msg){
                       console.log('time='+time);
 
                       result=stockId+' '+stockName+'\r\n股價:'+price+'\r\n漲跌:'+change+' '+changePercent+'\r\n成交量:' + volume;
-                      result+="\r\n資料更新時間:"+time;
+                      result+="\r\n資料更新時間:"+time;                      
                       console.log(result);
                       resolve(result);
                 }catch(err){                                   
@@ -272,5 +276,18 @@ function sendMessage(event,msg){
             });
           });
       });
+  }
+
+
+  function _checkLargeVolume(stockId){
+    _getStockVolume(stockId).then(function(volume){
+        if (volume>minVolume){
+          var userId = adminUserId;
+          var sendMsg = stockId+" 目前成交量:" + volume;
+          bot.push(userId, [sendMsg]);
+        }
+    });
+    clearTimeout(timerCheckLargeVolume);    
+    timerCheckLargeVolume = setInterval(timerCheckLargeVolume, 600*1000); //每10分抓取一次新資料
   }
 
