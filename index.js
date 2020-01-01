@@ -24,6 +24,7 @@ var cheerio=require('cheerio');//html parser
   var usdTime;
   const minVolume=500;
   const adminUserId='U773bb1c2a78a60a0a72e21c19c67befc';
+  var sendLargeCount=0;
   _getPM25();
   _getUSD();
 
@@ -278,16 +279,17 @@ function sendMessage(event,msg){
       });
   }
 
-
+  //定期偵測0056成交量
   function _checkLargeVolume(stockId){
     _getStockVolume(stockId).then(function(volume){
-        if (volume>minVolume){
+        if ((volume>minVolume)&&(sendLargeCount<=3)){
           var userId = adminUserId;
-          var sendMsg = stockId+" 目前成交量:" + volume;
-          bot.push(userId, [sendMsg]);
+          var sendMsg = stockId+" 目前成交量:" + volume + new Date();
+          bot.push(userId, sendMsg);
+          sendLargeCount++;
         }
     });
     clearTimeout(timerCheckLargeVolume);    
-    timerCheckLargeVolume = setInterval(timerCheckLargeVolume, 600*1000); //每10分抓取一次新資料
+    timerCheckLargeVolume = setInterval(_checkLargeVolume, 600*1000); //每10分抓取一次新資料
   }
 
