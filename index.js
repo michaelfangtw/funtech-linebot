@@ -77,13 +77,13 @@ var cheerio=require('cheerio');//html parser
                 cmdList+='美金匯率:e.g 我要查美金匯率\r\n';
                 cmdList+='PM2.5:e.g 板橋的PM2.5\r\n';
             
-                if (userId==adminUserId){
-                    replyMsg ='您目前身分為是管理者!\r\n';                    
-                    replyMsg+=cmdList;
-                }else{
-                    replyMsg= '您目前身分為是一般使用者!';                
-                    replyMsg+=cmdList;
-                }     
+                // if (userId==adminUserId){
+                //     replyMsg ='您目前身分為是管理者!\r\n';                    
+                //     replyMsg+=cmdList;
+                // }else{
+                //     replyMsg= '您目前身分為是一般使用者!';                
+                //     replyMsg+=cmdList;
+                // }     
                 sendMessage(event,replyMsg);   
                 
         }//check number
