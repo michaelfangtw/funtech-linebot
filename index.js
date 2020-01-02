@@ -24,7 +24,7 @@ var cheerio=require('cheerio');//html parser
   var usdTime;
   const minVolume=500;
   const adminUserId='U773bb1c2a78a60a0a72e21c19c67befc';
-  var sendLargeCount=0;
+  var lastSendDate="";
   _getPM25();
   _getUSD();
 
@@ -269,13 +269,14 @@ function sendMessage(event,msg){
         console.log("stockId="+stock.id);
         console.log("volume="+stock.volume);
         var minVol=10000;
-        if ((stock.volume>10000)&&(sendLargeCount<=3)){
+        var sendDate=stock.time.substring(0,10);
+        if (stock.volume>10000&&(lastSendDate!=sendDate)){
           var userId = adminUserId;
           var sendMsg = "★★★ "+stock.id+" "+stock.name+",成交量:" + stock.volume+"《超過"+minVol+"》\r\n";
             sendMsg+= "價格:"+stock.price+" " +stock.change + " "+stock.changePercent+",更新時間:"+stock.time;
           console.log("sendMsg="+sendMsg);
-          bot.push(userId, sendMsg);
-          sendLargeCount++;
+          bot.push(userId, sendMsg); 
+          lastSendDate=sendDate;
         }
     });
     clearTimeout(timerCheckLargeVolume);    
