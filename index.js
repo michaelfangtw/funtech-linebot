@@ -268,9 +268,9 @@ function sendMessage(event,msg){
         console.log(stock);        
         console.log("stockId="+stock.id);
         console.log("volume="+stock.volume);
-        var minVol=10000;
+        var minVol=20000;
         var sendDate=stock.time.substring(0,10);
-        if (stock.volume>10000&&(lastSendDate!=sendDate)){
+        if (stock.volume>minVol&&(lastSendDate!=sendDate)){
           var userId = adminUserId;
           var sendMsg = "★★★ "+stock.id+" "+stock.name+",成交量:" + stock.volume+"《超過"+minVol+"》\r\n";
             sendMsg+= "價格:"+stock.price+" " +stock.change + " "+stock.changePercent+",更新時間:"+stock.time;
