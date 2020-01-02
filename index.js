@@ -50,8 +50,8 @@ var cheerio=require('cheerio');//html parser
         var isNumber=msg.match("[0-9]{4,6}");
         console.log('isNumber='+isNumber);
         if (isNumber){
-                _getStock(msg).then((response)=>{
-                    replyMsg=response; //取得
+                _getStock(msg).then((stock)=>{
+                    replyMsg=formatStock(stock); //取得
                     sendMessage(event,replyMsg);                
                 }).catch((error) => {
                     console.log(error);
