@@ -268,9 +268,11 @@ function sendMessage(event,msg){
         console.log(stock);        
         console.log("stockId="+stock.id);
         console.log("volume="+stock.volume);
+        var minVol=10000;
         if ((stock.volume>10000)&&(sendLargeCount<=3)){
           var userId = adminUserId;
-          var sendMsg = "★★★★★ "+stock.id+" "+stock.name+" 價格:"+stock.price+",成交量:" + stock.volume + ",更新時間:"+stock.time +"★★★★★ ";
+          var sendMsg = "★★★ "+stock.id+" "+stock.name+",成交量:" + stock.volume+"超過"+minVol+"\r\n";
+            sendMsg+= "價格:"+stock.price+",更新時間:"+stock.time;
           console.log("sendMsg="+sendMsg);
           bot.push(userId, sendMsg);
           sendLargeCount++;
