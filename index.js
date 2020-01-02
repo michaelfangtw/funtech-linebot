@@ -261,7 +261,7 @@ function sendMessage(event,msg){
     })    
   }
 
-  //定期偵測0056成交量
+  //定期偵測0056成交量  
   function _checkLargeVolume(stockId){
     _getStock(stockId).then(function(stock){
       console.log("====_checkLargeVolume===");
@@ -271,7 +271,7 @@ function sendMessage(event,msg){
         var minVol=10000;
         if ((stock.volume>10000)&&(sendLargeCount<=3)){
           var userId = adminUserId;
-          var sendMsg = "★★★ "+stock.id+" "+stock.name+",成交量:" + stock.volume+"超過"+minVol+"\r\n";
+          var sendMsg = "★★★ "+stock.id+" "+stock.name+",成交量:" + stock.volume+"《超過"+minVol+"》\r\n";
             sendMsg+= "價格:"+stock.price+" " +stock.change + " "+stock.changePercent+",更新時間:"+stock.time;
           console.log("sendMsg="+sendMsg);
           bot.push(userId, sendMsg);
