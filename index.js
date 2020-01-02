@@ -203,37 +203,36 @@ function sendMessage(event,msg){
                 {
                       var $ = cheerio.load(body);                
                       console.log("============================");
+                      var stock=new Stock();
+                      stock.id=stockId;
                       var stockTag = $(".TwstockID h3");                                     
                       var stockName=stockTag[0].children[0].data;
-                      console.log('stockName='+stockName);
+                      stock.name=stockName;                                            
+
                       var priceTag = $(".TwstockID h1");                
                       var price=priceTag[0].children[0].data;
-                      //console.log(priceTag);
-                      console.log('price='+price);
+                      stock.price=price;                      
 
                       var changeTag = $(".TwstockID div");     
                       var change=changeTag[0].children[0].data;
                       var changeArray=change.split("(");   
                       change=changeArray[0];
-                      console.log('change='+change);                                            
+                      stock.change=change;
+
                       var changePercent=changeArray[1].replace(")","");
-                      console.log('changePercent='+changePercent);
+                      stock.changePercent=changePercent;
 
                       var volumeTag = $(".TwstockMainBox .R");   
                       //console.log(volumeTag[2].children[3].children[0].data);
                       var volume=volumeTag[2].children[3].children[0].data.replace(",","");
-                      console.log('volume='+volume);
+                      //console.log('volume='+volume);
+                      stock.volume=volume;
 
                       var timeTag = $(".TwstockMainBox .R .day");
                       console.log(timeTag[0].children[0].data);
                       var time=timeTag[0].children[0].data;  
-                      console.log('time='+time);
-
-                      result=stockId+' '+stockName+'\r\n股價:'+price+'\r\n漲跌:'+change+' '+changePercent+'\r\n成交量:' + volume;
-                      result+="\r\n資料更新時間:"+time;                      
-                      console.log(result);
-                      console.log("============================");
-                      resolve(result);
+                      stock.time=time;                      
+                      resolve(stock);
                 }catch(err){                                   
                     result="查無股票代號:" +stockId;
                     console.log('getStock,error='+err);
@@ -248,49 +247,30 @@ function sendMessage(event,msg){
       });
   }
 
-  function _getStockVolume(stockId) {
-    return new Promise((resolve, reject) => {          
-          var url='https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId='+stockId;
-          console.log(url); 
-          var result="";
-          var body='';
-          var req = https.get(url,function(res) {      
-            res.on('data', function (chunk) {
-              body += chunk;
-          });
+  function formatStock(stock){
+    var result="";
+    console.log(stock);
+    result=stock.id+' '+stock.name+'\r\n股價:'+stock.price+'\r\n漲跌:'+stock.change+' '+stock.changePercent+'\r\n成交量:' + stock.volume;
+                      result+="\r\n資料更新時間:"+stock.time;                      
+    return result;
+  }
 
-            res.on('end', function(){     
-                try
-                {                  
-                      var $ = cheerio.load(body);                     
-                      var volumeTag = $(".TwstockMainBox .R");                         
-                      var volume=volumeTag[2].children[3].children[0].data.replace(",","");
-                      console.log('volume='+volume);
-                      result=volume;
-                      resolve(result);
-                }catch(err){                                   
-                    result="查無股票代號:" +stockId;
-                    console.log('getStock,error='+err);
-                    console.log(result);
-                    resolve(result);
-                }
-            });
-            req.on('error', function(e) {
-              reject(error);
-            });
-          });
-      });
+  async function _getStockVolume(stockId) {
+    await this._getStock(stockId).then(function(result){
+        return result.volume;
+    })    
   }
 
   //定期偵測0056成交量
   function _checkLargeVolume(stockId){
-    _getStockVolume(stockId).then(function(volume){
-        console.log("====_checkLargeVolume===");
-        console.log("stockId="+stockId);
-        console.log("volume="+volume);
-        if ((volume>10000)&&(sendLargeCount<=3)){
+    _getStock(stockId).then(function(stock){
+      console.log("====_checkLargeVolume===");
+        console.log(stock);        
+        console.log("stockId="+stock.id);
+        console.log("volume="+stock.volume);
+        if ((stock.volume>10000)&&(sendLargeCount<=3)){
           var userId = adminUserId;
-          var sendMsg = stockId+" 目前成交量:" + volume + " 成交時間:"+new Date();
+          var sendMsg = "★★★★★ "+stock.id+" "+stock.name+" 價格:"+stock.price+",成交量:" + stock.volume + ",更新時間:"+stock.time +"★★★★★ ";
           console.log("sendMsg="+sendMsg);
           bot.push(userId, sendMsg);
           sendLargeCount++;
@@ -300,3 +280,53 @@ function sendMessage(event,msg){
     timerCheckLargeVolume = setInterval(_checkLargeVolume, 600*1000); //每10分抓取一次新資料
   }
 
+  class Stock {
+    constructor() {      
+    }
+    set id(id){
+      this._id=id;
+    }
+    get id(){
+      return this._id;
+    }
+    
+    set name(name) {
+      this._name = name;
+    }
+    get name() {
+      return this._name;
+    } 
+    set price(price)  {
+      this._price=price;
+    }
+    get price(){
+      return this._price;
+    }
+    set volume(volume){
+      this._volume=volume;
+    }
+    get volume(){
+      return this._volume;
+    }
+
+    set change(change){
+      this._change=change;
+    }
+    get change(){
+      return this._change;
+    }        
+
+    set changePercent(changePercent){
+      this._changePercent=changePercent;
+    }
+
+    get changePercent(){
+      return this._changePercent;
+    }
+    set time(time){
+      this._time=time;
+    }
+    get time(){
+      return this._time;
+    }
+  }
