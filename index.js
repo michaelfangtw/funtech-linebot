@@ -272,14 +272,14 @@ function sendMessage(event,msg){
         if ((stock.volume>10000)&&(sendLargeCount<=3)){
           var userId = adminUserId;
           var sendMsg = "★★★ "+stock.id+" "+stock.name+",成交量:" + stock.volume+"超過"+minVol+"\r\n";
-            sendMsg+= "價格:"+stock.price+",更新時間:"+stock.time;
+            sendMsg+= "價格:"+stock.price+" " +stock.change + " "+stock.changePercent+",更新時間:"+stock.time;
           console.log("sendMsg="+sendMsg);
           bot.push(userId, sendMsg);
           sendLargeCount++;
         }
     });
     clearTimeout(timerCheckLargeVolume);    
-    timerCheckLargeVolume = setInterval(_checkLargeVolume, 600*1000); //每10分抓取一次新資料
+    timerCheckLargeVolume = setInterval(_checkLargeVolume, 60*1000); //每10分抓取一次新資料
   }
 
   class Stock {
