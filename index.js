@@ -186,7 +186,7 @@ function sendMessage(event,msg){
     clearTimeout(timerUSD);    
     timerUSD = setInterval(_getUSD, 1800*1000); //每半小時抓取一次新資料
   }
-
+  
   function _getStock(stockId) {
     return new Promise((resolve, reject) => {
           var url='https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId='+stockId;
@@ -261,7 +261,7 @@ function sendMessage(event,msg){
 
             res.on('end', function(){     
                 try
-                {
+                {                  
                       var $ = cheerio.load(body);                     
                       var volumeTag = $(".TwstockMainBox .R");                         
                       var volume=volumeTag[2].children[3].children[0].data.replace(",","");
