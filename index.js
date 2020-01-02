@@ -28,6 +28,7 @@ var cheerio=require('cheerio');//html parser
   _getPM25();
   _getUSD();
 
+  _getStock('0056');
   _checkLargeVolume('0056');
   _bot();
   const app = express();
@@ -188,7 +189,7 @@ function sendMessage(event,msg){
 
   function _getStock(stockId) {
     return new Promise((resolve, reject) => {
-          var url='https://m.wantgoo.com/s/'+stockId;
+          var url='https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId='+stockId;
           console.log(url); 
           var result="";
           var body='';
@@ -201,35 +202,37 @@ function sendMessage(event,msg){
                 try
                 {
                       var $ = cheerio.load(body);                
-                      var stockTag = $(".headline");                
-                      var stockName=stockTag[0].children[0].data.replace('即時行情','');
+                      console.log("============================");
+                      var stockTag = $(".TwstockID h3");                                     
+                      var stockName=stockTag[0].children[0].data;
                       console.log('stockName='+stockName);
-                      var priceTag = $(".astkPrice");                
-                      var price=priceTag[0].children[0].data.replace(/\n/g, "");
+                      var priceTag = $(".TwstockID h1");                
+                      var price=priceTag[0].children[0].data;
                       //console.log(priceTag);
                       console.log('price='+price);
 
-                      var changeTag = $(".astkInfo .astkChg");                
+                      var changeTag = $(".TwstockID div");     
                       var change=changeTag[0].children[0].data;
-                      console.log('change='+change);
-                      //console.log(changeTag[0].children[0].data);
-
-                      var changePercentTag = $(".astkChg i");                
-                      var changePercent=changePercentTag.text();
+                      var changeArray=change.split("(");   
+                      change=changeArray[0];
+                      console.log('change='+change);                                            
+                      var changePercent=changeArray[1].replace(")","");
                       console.log('changePercent='+changePercent);
 
-                      var volumeTag = $(".astkIdx li span");                
-                      var volume=volumeTag[4].children[0].data;
+                      var volumeTag = $(".TwstockMainBox .R");   
+                      //console.log(volumeTag[2].children[3].children[0].data);
+                      var volume=volumeTag[2].children[3].children[0].data.replace(",","");
                       console.log('volume='+volume);
 
-                      var timeTag = $("time.update");                                      
-                      var time=timeTag[0].children[0].data;
-                      //console.log(timeTag);
+                      var timeTag = $(".TwstockMainBox .R .day");
+                      console.log(timeTag[0].children[0].data);
+                      var time=timeTag[0].children[0].data;  
                       console.log('time='+time);
 
                       result=stockId+' '+stockName+'\r\n股價:'+price+'\r\n漲跌:'+change+' '+changePercent+'\r\n成交量:' + volume;
                       result+="\r\n資料更新時間:"+time;                      
                       console.log(result);
+                      console.log("============================");
                       resolve(result);
                 }catch(err){                                   
                     result="查無股票代號:" +stockId;
@@ -246,8 +249,8 @@ function sendMessage(event,msg){
   }
 
   function _getStockVolume(stockId) {
-    return new Promise((resolve, reject) => {
-          var url='https://m.wantgoo.com/s/'+stockId;
+    return new Promise((resolve, reject) => {          
+          var url='https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId='+stockId;
           console.log(url); 
           var result="";
           var body='';
@@ -259,9 +262,9 @@ function sendMessage(event,msg){
             res.on('end', function(){     
                 try
                 {
-                      var $ = cheerio.load(body);
-                      var volumeTag = $(".astkIdx li span");                
-                      var volume=volumeTag[4].children[0].data;
+                      var $ = cheerio.load(body);                     
+                      var volumeTag = $(".TwstockMainBox .R");                         
+                      var volume=volumeTag[2].children[3].children[0].data.replace(",","");
                       console.log('volume='+volume);
                       result=volume;
                       resolve(result);
@@ -282,9 +285,13 @@ function sendMessage(event,msg){
   //定期偵測0056成交量
   function _checkLargeVolume(stockId){
     _getStockVolume(stockId).then(function(volume){
-        if ((volume>minVolume)&&(sendLargeCount<=3)){
+        console.log("====_checkLargeVolume===");
+        console.log("stockId="+stockId);
+        console.log("volume="+volume);
+        if ((volume>10000)&&(sendLargeCount<=3)){
           var userId = adminUserId;
-          var sendMsg = stockId+" 目前成交量:" + volume + new Date();
+          var sendMsg = stockId+" 目前成交量:" + volume + " 成交時間:"+new Date();
+          console.log("sendMsg="+sendMsg);
           bot.push(userId, sendMsg);
           sendLargeCount++;
         }
