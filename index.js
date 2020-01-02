@@ -279,7 +279,7 @@ function sendMessage(event,msg){
         }
     });
     clearTimeout(timerCheckLargeVolume);    
-    timerCheckLargeVolume = setInterval(_checkLargeVolume, 60*1000); //每10分抓取一次新資料
+    timerCheckLargeVolume = setInterval(_checkLargeVolume, 600*1000); //每10分抓取一次新資料
   }
 
   class Stock {
