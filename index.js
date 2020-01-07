@@ -29,7 +29,7 @@ var cheerio=require('cheerio');//html parser
   _getUSD();
 
   _getStock('0056');
-  _checkLargeVolume('0056');
+  _checkLargeVolume('0056');  
   _bot();
   const app = express();
   const linebotParser = bot.parser();
@@ -98,15 +98,24 @@ var cheerio=require('cheerio');//html parser
   }//bot
   
   //傳送訊息的函式
-function sendMessage(event,msg){
-  msg = {
+function sendMessage(event,message){
+  /*
+  message = {
     "type": "sticker",
     "packageId": "1",
     "stickerId": "1"
   };  
-  event.reply(msg).then(function(data) {
+
+  message = {
+    "type": "image",
+    "originalContentUrl": "圖片網址",
+    "previewImageUrl": "縮圖網址"
+  }
+ */
+  event.reply(message).then(function(data) {
      // success 
-     console.log(replyMsg);
+     console.log('message='+message);
+     console.log('data='+data);
      return true;
   }).catch(function(error) {
      // error 
@@ -274,7 +283,10 @@ function sendMessage(event,msg){
       console.log("====_checkLargeVolume===");
         console.log(stock);        
         console.log("stockId="+stock.id);
-        console.log("volume="+stock.volume);        
+        console.log("volume="+stock.volume);    
+        console.log("minVolume="+minVolume);    
+        console.log("lastSendDate="+lastSendDate);
+        console.log("sendDate="+sendDate);        
         var sendDate=stock.time.substring(0,10);
         if (stock.volume>minVolume&&(lastSendDate!=sendDate)){
           var userId = adminUserId;
