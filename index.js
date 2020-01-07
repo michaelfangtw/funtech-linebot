@@ -27,9 +27,6 @@ var cheerio=require('cheerio');//html parser
   var lastSendDate="";
   _getPM25();
   _getUSD();
-
-  _getStock('0056');
-  _checkLargeVolume('0056');  
   _bot();
   const app = express();
   const linebotParser = bot.parser();
@@ -40,6 +37,9 @@ var cheerio=require('cheerio');//html parser
     var port = server.address().port;
     console.log("App now running on port", port);
   });
+
+  _getStock('0056');
+  _checkLargeVolume('0056');  
   
   function _bot() {
     bot.on('message', function(event) {
