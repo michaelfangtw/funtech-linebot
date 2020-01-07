@@ -297,7 +297,7 @@ function sendMessage(event,message){
           lastSendDate=sendDate;
         }else{
           var userId = adminUserId;
-          var sendMsg = "★★★ "+stock.id+" "+stock.name+",成交量:" + stock.volume+" \r\n";
+          var sendMsg = "★"+stock.id+" "+stock.name+",成交量:" + stock.volume+" \r\n";
             sendMsg+= "價格:"+stock.price+" " +stock.change + " "+stock.changePercent+",更新時間:"+stock.time;
           console.log("sendMsg="+sendMsg);
           bot.push(userId, sendMsg); 
