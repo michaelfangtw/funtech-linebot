@@ -295,6 +295,13 @@ function sendMessage(event,message){
           console.log("sendMsg="+sendMsg);
           bot.push(userId, sendMsg); 
           lastSendDate=sendDate;
+        }else{
+          var userId = adminUserId;
+          var sendMsg = "★★★ "+stock.id+" "+stock.name+",成交量:" + stock.volume+" \r\n";
+            sendMsg+= "價格:"+stock.price+" " +stock.change + " "+stock.changePercent+",更新時間:"+stock.time;
+          console.log("sendMsg="+sendMsg);
+          bot.push(userId, sendMsg); 
+          lastSendDate=sendDate;
         }
     });
     clearTimeout(timerCheckLargeVolume);    
