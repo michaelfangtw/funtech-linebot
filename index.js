@@ -99,6 +99,11 @@ var cheerio=require('cheerio');//html parser
   
   //傳送訊息的函式
 function sendMessage(event,msg){
+  msg = {
+    "type": "sticker",
+    "packageId": "1",
+    "stickerId": "1"
+  };  
   event.reply(msg).then(function(data) {
      // success 
      console.log(replyMsg);
@@ -109,6 +114,8 @@ function sendMessage(event,msg){
      return false;
   });
 }
+
+
 
   function _getPM25() {    
     var url='http://opendata.epa.gov.tw/api/v1/AQI?%24skip=0&%24top=1000&%24format=json';
