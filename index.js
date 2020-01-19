@@ -22,12 +22,12 @@ var cheerio=require('cheerio');//html parser
   var pm = [];
   var usd;//美金
   var usdTime;
-  const minVolume=20000;
   const adminUserId='U773bb1c2a78a60a0a72e21c19c67befc';
-  var lastSendDate="";
-  _getPM25();
-  _getUSD();
-  _bot();
+  const intervalInSec=600;
+  let lastStockTime="";
+  let stockID="0056";
+  
+  
   const app = express();
   const linebotParser = bot.parser();
   app.post('/', linebotParser);
@@ -37,11 +37,14 @@ var cheerio=require('cheerio');//html parser
     var port = server.address().port;
     console.log("App now running on port", port);
   });
+  runBot();    
+  updatePM25PerHour();
+  updateUSDPerHour();
+  getStockByID(stockID);
+  const minVolume=11000;
+  checkLargeVolume(stockID,adminUserId,minVolume,intervalInSec); //every 10 mins check 
 
-  _getStock('0056');
-  _checkLargeVolume('0056');  
-  
-  function _bot() {
+  function runBot() {
     bot.on('message', function(event) {
       let userId=event.source.userId;
       if (event.message.type == 'text') {
@@ -50,7 +53,7 @@ var cheerio=require('cheerio');//html parser
         var isNumber=msg.match("[0-9]{4,6}");
         console.log('isNumber='+isNumber);
         if (isNumber){
-                _getStock(msg).then((stock)=>{
+                getStockByID(msg).then((stock)=>{
                     replyMsg=formatStock(stock); //取得
                     sendMessage(event,replyMsg);                
                 }).catch((error) => {
@@ -126,7 +129,7 @@ function sendMessage(event,message){
 
 
 
-  function _getPM25() {    
+  function updatePM25PerHour() {    
     var url='http://opendata.epa.gov.tw/api/v1/AQI?%24skip=0&%24top=1000&%24format=json';
     console.log(url); 
     var body='';
@@ -171,11 +174,11 @@ function sendMessage(event,message){
 
     
     clearTimeout(timerPM);    
-    timerPM = setInterval(_getPM25, 1800*1000); //每半小時抓取一次新資料
+    timerPM = setInterval(updatePM25PerHour, 3600*1000); //每小時抓取一次新資料
   }
 
   
-  function _getUSD() {    
+  function updateUSDPerHour() {    
     var url='https://rate.bot.com.tw/xrt?Lang=zh-TW';
     console.log(url); 
     var body='';
@@ -200,10 +203,10 @@ function sendMessage(event,message){
 
     
     clearTimeout(timerUSD);    
-    timerUSD = setInterval(_getUSD, 1800*1000); //每半小時抓取一次新資料
+    timerUSD = setInterval(updateUSDPerHour, 3600*1000); //每小時抓取一次新資料
   }
   
-  function _getStock(stockId) {
+  function getStockByID(stockId) {
     return new Promise((resolve, reject) => {
           var url='https://ww2.money-link.com.tw/TWStock/StockChart.aspx?SymId='+stockId;
           console.log(url); 
@@ -271,41 +274,31 @@ function sendMessage(event,message){
     return result;
   }
 
-  async function _getStockVolume(stockId) {
-    await this._getStock(stockId).then(function(result){
-        return result.volume;
-    })    
-  }
-
+ 
   //定期偵測0056成交量  
-  function _checkLargeVolume(stockId){
-    _getStock(stockId).then(function(stock){
-      console.log("====_checkLargeVolume===");
-        console.log(stock);        
-        console.log("stockId="+stock.id);
-        console.log("volume="+stock.volume);    
-        console.log("minVolume="+minVolume);    
-        console.log("lastSendDate="+lastSendDate);
-        console.log("sendDate="+sendDate);        
-        var sendDate=stock.time.substring(0,10);
-        if (stock.volume>minVolume&&(lastSendDate!=sendDate)){
-          var userId = adminUserId;
-          var sendMsg = "★★★ "+stock.id+" "+stock.name+",成交量:" + stock.volume+"《超過"+minVollume+"》\r\n";
+  async function checkLargeVolume(stockId,userId,minVolume,intervalInSec){
+       var stock=await getStockByID(stockId);
+       var stockTime=stock.time.substring(0,10);
+       console.log(stock);              
+       console.log("====checkLargeVolume start===");        
+       console.log("userId="+userId);      
+       console.log("stockId="+stock.id);
+       console.log("volume="+stock.volume);    
+       console.log("minVolume="+minVolume);    
+       console.log("lastStockTime="+lastStockTime);
+       console.log("stockTime="+stockTime);  
+       console.log("time="+new Date());
+        if (stock.volume>minVolume&&(lastStockTime!=stockTime)){          
+          var sendMsg = "★★★ "+stock.id+" "+stock.name+",成交量:" + stock.volume+"《超過"+minVolume+"》\r\n";
             sendMsg+= "價格:"+stock.price+" " +stock.change + " "+stock.changePercent+",更新時間:"+stock.time;
           console.log("sendMsg="+sendMsg);
           bot.push(userId, sendMsg); 
-          lastSendDate=sendDate;
-        }else{
-          var userId = adminUserId;
-          var sendMsg = "★"+stock.id+" "+stock.name+",成交量:" + stock.volume+" \r\n";
-            sendMsg+= "價格:"+stock.price+" " +stock.change + " "+stock.changePercent+",更新時間:"+stock.time;
-          console.log("sendMsg="+sendMsg);
-          bot.push(userId, sendMsg); 
-          lastSendDate=sendDate;
-        }
-    });
-    clearTimeout(timerCheckLargeVolume);    
-    timerCheckLargeVolume = setInterval(_checkLargeVolume, 600*1000); //每10分抓取一次新資料
+          console.log("push to userId="+userId);
+          lastStockTime=stockTime;     
+        }        
+        console.log("====checkLargeVolume end===");       
+        clearTimeout(timerCheckLargeVolume);    
+        timerCheckLargeVolume = setInterval(checkLargeVolume, intervalInSec*1000); //每10分抓取一次新資料
   }
 
   class Stock {
