@@ -295,8 +295,9 @@ function sendMessage(event,message){
        console.log("systemTime="+systemTime);
         if (stock.volume>minVolume&&(lastStockTime!=stockTime)){          
           var sendMsg = "★★★ "+stock.id+" "+stock.name+",成交量:" + stock.volume+"《超過"+minVolume+"》\r\n";
-            sendMsg+= "價格:"+stock.price+" " +stock.change + " "+stock.changePercent+",股價時間:"+stock.time+"\r\n";
-            sendMsg+= ",系統時間:"+systemTime
+            sendMsg+= "價格:"+stock.price+" " +stock.change + " "+stock.changePercent+"\r\n";
+            sendMsg+= "股價時間:"+stock.time+"\r\n";
+            sendMsg+= "系統時間:"+systemTime
           console.log("sendMsg="+sendMsg);
           bot.push(userId, sendMsg); 
           console.log("push to userId="+userId);
@@ -305,6 +306,10 @@ function sendMessage(event,message){
         console.log("====checkLargeVolume end===");       
         clearTimeout(timerCheckLargeVolume);    
         timerCheckLargeVolume = setInterval(checkLargeVolume, intervalInSec*1000); //每10分抓取一次新資料
+
+        timerCheckLargeVolume=setInterval( ()=>{ 
+          checkLargeVolume(stockId,userId,minVolume,intervalInSec); 
+        }, intervalInSec*1000);
   }
 
   class Stock {
