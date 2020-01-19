@@ -58,8 +58,13 @@ var dateFormat = require('dateformat');
         if (isNumber){
                 getStockByID(msg).then((stock)=>{
                     console.log(stock);
-                    replyMsg=formatStock(stock); //取得
-                    sendMessage(event,replyMsg);                
+                    if (stock.name!=undefined){
+                      replyMsg=formatStock(stock); //取得
+                      sendMessage(event,replyMsg);                
+                    }else{
+                      replyMsg="查無股票代號:" +msg;
+                      sendMessage(event,replyMsg);                
+                    }
                 }).catch((error) => {
                     console.log(error);
                 });
