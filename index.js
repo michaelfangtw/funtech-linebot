@@ -41,7 +41,7 @@ var dateFormat = require('dateformat');
   updateUSDPerHour();
   
   const stockID="0056";
-  const minVolume=20000;
+  const minVolume=10000;
   const intervalInSec=600;
   let lastStockTime="";
     //getStockByID(stockID);
