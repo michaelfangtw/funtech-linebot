@@ -4,6 +4,7 @@ var http = require('http');
 var https = require('https');
 var fs = require("fs");
 var cheerio=require('cheerio');//html parser
+var dateFormat = require('dateformat');
 
   var bot = linebot({
     channelId: process.env.ChannelId,
@@ -279,9 +280,11 @@ function sendMessage(event,message){
  
   //定期偵測0056成交量  
   async function checkLargeVolume(stockId,userId,minVolume,intervalInSec){
-       var stock=await getStockByID(stockId);
-       var stockTime=stock.time.substring(0,10);
-       console.log(stock);              
+       let stock=await getStockByID(stockId);
+       let stockTime=stock.time.substring(0,10);
+       let now=new Date(new Date().toUTCString());
+       var systemTime=dateFormat(now, "yyyy-mm-dd HH:MM:ss"); 
+       //console.log(stock);              
        console.log("====checkLargeVolume start===");        
        console.log("userId="+userId);      
        console.log("stockId="+stock.id);
@@ -289,10 +292,11 @@ function sendMessage(event,message){
        console.log("minVolume="+minVolume);    
        console.log("lastStockTime="+lastStockTime);
        console.log("stockTime="+stockTime);  
-       console.log("time="+new Date());
+       console.log("systemTime="+systemTime);
         if (stock.volume>minVolume&&(lastStockTime!=stockTime)){          
           var sendMsg = "★★★ "+stock.id+" "+stock.name+",成交量:" + stock.volume+"《超過"+minVolume+"》\r\n";
-            sendMsg+= "價格:"+stock.price+" " +stock.change + " "+stock.changePercent+",更新時間:"+stock.time;
+            sendMsg+= "價格:"+stock.price+" " +stock.change + " "+stock.changePercent+",股價時間:"+stock.time+"\r\n";
+            sendMsg+= ",系統時間:"+systemTime
           console.log("sendMsg="+sendMsg);
           bot.push(userId, sendMsg); 
           console.log("push to userId="+userId);
