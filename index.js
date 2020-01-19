@@ -23,9 +23,7 @@ var cheerio=require('cheerio');//html parser
   var usd;//美金
   var usdTime;
   const adminUserId='U773bb1c2a78a60a0a72e21c19c67befc';
-  const intervalInSec=600;
-  let lastStockTime="";
-  let stockID="0056";
+
   
   
   const app = express();
@@ -40,8 +38,12 @@ var cheerio=require('cheerio');//html parser
   runBot();    
   updatePM25PerHour();
   updateUSDPerHour();
-  getStockByID(stockID);
+  
   const minVolume=11000;
+  const intervalInSec=600;
+  let lastStockTime="";
+  let stockID="0056";
+  //getStockByID(stockID);
   checkLargeVolume(stockID,adminUserId,minVolume,intervalInSec); //every 10 mins check 
 
   function runBot() {
