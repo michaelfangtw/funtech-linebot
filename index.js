@@ -42,7 +42,7 @@ var dateFormat = require('dateformat');
   
   const stockID="0056";
   const minVolume=11000;
-  const intervalInSec=60;
+  const intervalInSec=600;
   let lastStockTime="";
     //getStockByID(stockID);
   checkLargeVolume(stockID,adminUserId,minVolume,intervalInSec); //every 10 mins check 
