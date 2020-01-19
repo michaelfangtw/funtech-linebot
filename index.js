@@ -278,9 +278,9 @@ function sendMessage(event,message){
 
   function formatStock(stock){
     var result="";
-    console.log(stock);
+    //console.log(stock);
     result=stock.id+' '+stock.name+'\r\n股價:'+stock.price+'\r\n漲跌:'+stock.change+' '+stock.changePercent+'\r\n成交量:' + stock.volume;
-                      result+="\r\n資料更新時間:"+stock.time;                      
+                      result+="\r\n股價更新時間:"+stock.time;                      
     return result;
   }
 
