@@ -118,8 +118,9 @@ function sendMessage(event,message){
     "previewImageUrl": "縮圖網址"
   }
  */
+
   event.reply(message).then(function(data) {
-     // success 
+     // success      
      console.log('message='+message);
      console.log('data='+data);
      return true;
