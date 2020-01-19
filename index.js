@@ -39,11 +39,11 @@ var cheerio=require('cheerio');//html parser
   updatePM25PerHour();
   updateUSDPerHour();
   
+  const stockID="0056";
   const minVolume=11000;
-  const intervalInSec=600;
+  const intervalInSec=60;
   let lastStockTime="";
-  let stockID="0056";
-  //getStockByID(stockID);
+    //getStockByID(stockID);
   checkLargeVolume(stockID,adminUserId,minVolume,intervalInSec); //every 10 mins check 
 
   function runBot() {
