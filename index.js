@@ -282,7 +282,7 @@ function sendMessage(event,message){
   async function checkLargeVolume(stockId,userId,minVolume,intervalInSec){
        let stock=await getStockByID(stockId);
        let stockTime=stock.time.substring(0,10);
-       let now=new Date(new Date().toUTCString());
+       let now=new Date().getUTCDate();
        var systemTime=dateFormat(now, "yyyy-mm-dd HH:MM:ss"); 
        //console.log(stock);              
        console.log("====checkLargeVolume start===");        
