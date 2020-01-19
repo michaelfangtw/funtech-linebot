@@ -57,6 +57,7 @@ var dateFormat = require('dateformat');
         console.log('isNumber='+isNumber);
         if (isNumber){
                 getStockByID(msg).then((stock)=>{
+                    console.log(stock);
                     replyMsg=formatStock(stock); //取得
                     sendMessage(event,replyMsg);                
                 }).catch((error) => {
